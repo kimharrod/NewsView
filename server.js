@@ -102,7 +102,7 @@ app.get("/scrape", function(req, res) {
 	res.send("Scrape Complete");
 });
 
-// Route to get the scraped articles from the mongoDB
+// Route to retrieve scraped articles from the mongoDB
 app.get("/articles/", function(req, res) {
 	// Get all docs in the Articles array
 	Article.find({}, function(error, doc) {
@@ -116,5 +116,28 @@ app.get("/articles/", function(req, res) {
 		}
 	});
 });
+
+// Route to retrieve a single article by ObjectID
+app.get("/articles/:id", function(req, res) {
+
+	// Using the id passed in the id parameter, 
+	// Prepare a db query that finds the matching article
+	Article.findOne({ "_id": req.params.id })
+
+	// Populate all of the comments associated with it
+	.populate("comments")
+
+	// And execute the query
+	.exec(function(error, doc) {
+		//log any errors
+		if (error) {
+			console.log(error);
+		}
+		else {
+			res.json(doc);
+		}
+	});	
+});
+
 
 
