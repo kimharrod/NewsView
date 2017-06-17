@@ -102,4 +102,19 @@ app.get("/scrape", function(req, res) {
 	res.send("Scrape Complete");
 });
 
+// Route to get the scraped articles from the mongoDB
+app.get("/articles/", function(req, res) {
+	// Get all docs in the Articles array
+	Article.find({}, function(error, doc) {
+
+		// Log any errors
+		if (error) {
+			console.log(error);
+		}
+		else {
+			res.json(doc);
+		}
+	});
+});
+
 
