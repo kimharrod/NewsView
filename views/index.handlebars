@@ -13,8 +13,8 @@
 <br><br><br>
 
 <!-- Menu with < category > styling -->
-	<div class="container marketing">
-	<center>
+<div class="container marketing">
+  <center>
 	<div class="menu-wrapper">
 		<ul class="menu">
 			<li class="item num1" id="all">All</li>
@@ -25,38 +25,69 @@
 			<button class="right-paddle paddle">></button>
 		</div>
 	</div>
-	</center>
+  </center>
 
-<br>
+  <br>
 
-<!-- Handlebars card display on inital load -->
-<div class="container-fluid">
-	<div class="card-columns" id="articles">
+	<!-- Handlebars article display on inital load -->
+	<div class="container-fluid">
+		<div class="card-columns" id="articles">
 
-	{{#each articles}}
+		{{#each articles}}
 
-	<div class="card myArts" id="{{this.id}}">
-	  <div class="card-header">{{this.title}}</div>
-	  	<div class="card-block">
-	  	  <div class="card-text">
-	  	  	<div class="panel-body">
-	  	  	  <img src="{{this.image}}" width="100%">
-	  	  	  <p>{{this.description}}</p>
-  	  	  	</div>
-  	  	  </div>
-  	  	</div>
-  	</div>
+		<div class="card myArts" id="{{this.id}}">
+		  <div class="card-header">{{this.title}}</div>
+		  	<div class="card-block">
+		  	  <div class="card-text">
+		  	  	<div class="panel-body">
+		  	  	  <img src="{{this.image}}" width="100%">
+		  	  	  <p>{{this.description}}</p>
+	  	  	  	</div>
+	  	  	  </div>
+	  	  	</div>
+	  	</div>
 
-	{{/each}}
+		{{/each}}
 
+		</div>
 	</div>
-</div>
 
-<!-- Footer -->
-<footer>
+	<!-- Footer -->
+	<footer>
 
-</footer>
+	</footer>
 
 </div> <!-- /.container -->
+
+<!-- Modal to display article summary with comment, save & in-line edit -->
+<div id="articleModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    
+    <div class="modal-header">
+    <h2 class="modal-title" id="artName"></h2>
+    </div>
+
+    <div class="modal-body">
+	    <img id="articleImg" src="img/news-image.jpeg" alt="No article image" style="height: auto; max-width: 100%">
+	    <p><div id="artComments"></div></p>
+    </div>
+
+    <hr>
+
+    &npsp; &npsp; <textarea rows="2" cols="47" id="addText" placeholder="Add comment here"></textarea>
+    <button type="button" id="add" class="btn btn-default">Add</button>
+
+  </div>
+
+  <!-- Footer content dynamically inserted here -->
+  <div class="modal-footer" id="cardFooter"></div>
+
+</div>
+
+
+
 
 
