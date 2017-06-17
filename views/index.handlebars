@@ -1,0 +1,62 @@
+<!-- Navbar -->
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">NewsViews: Progressive news and views</a>
+     
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto"></ul>      
+    </div>
+</nav>
+
+<br><br><br>
+
+<!-- Menu with < category > styling -->
+	<div class="container marketing">
+	<center>
+	<div class="menu-wrapper">
+		<ul class="menu">
+			<li class="item num1" id="all">All</li>
+			<li class="item num2" id="saved">Saved</li>
+		</ul>
+		<div class="paddles">
+			<button class="left-paddle paddle hidden"><</button>
+			<button class="right-paddle paddle">></button>
+		</div>
+	</div>
+	</center>
+
+<br>
+
+<!-- Handlebars card display on inital load -->
+<div class="container-fluid">
+	<div class="card-columns" id="articles">
+
+	{{#each articles}}
+
+	<div class="card myArts" id="{{this.id}}">
+	  <div class="card-header">{{this.title}}</div>
+	  	<div class="card-block">
+	  	  <div class="card-text">
+	  	  	<div class="panel-body">
+	  	  	  <img src="{{this.image}}" width="100%">
+	  	  	  <p>{{this.description}}</p>
+  	  	  	</div>
+  	  	  </div>
+  	  	</div>
+  	</div>
+
+	{{/each}}
+
+	</div>
+</div>
+
+<!-- Footer -->
+<footer>
+
+</footer>
+
+</div> <!-- /.container -->
+
+
