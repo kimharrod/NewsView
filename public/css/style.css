@@ -10,6 +10,12 @@ body {
 
 }
 
+#date {
+  padding-top: 15px;
+  color: white;
+  font-size: 20px;
+}
+
 #add {
   position: absolute;
   bottom: 88px;
@@ -20,7 +26,7 @@ body {
 #addText {
   position: relative;
   bottom: 5px;
-  right: 4px;
+  left: 15px;
   border-radius: 5px;
 }
 
