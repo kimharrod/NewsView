@@ -162,7 +162,7 @@ router.post("/comment/:id", function(req, res) {
 			Article.findOneAndUpdate({"_id": req.params.id}, { $push: { "comments": doc.id } }, { new: true})
 			// And populate all of the comments associated with it
 			.populate("comments")
-			// Execute the above query
+			// Execute the query above
 			.exec(function(err, doc) {
 				// Log any errors
 				if (error) {
@@ -183,7 +183,7 @@ router.put("/save/:id", function(req, res) {
 	var art = req.params;
 
 	   Article.update({ "_id": art.id }, { "saved": true })
-	     // Execute the above query
+	     // Execute the query above
 	     .exec(function(err, doc) {
 	     	// Log any errors
 	     	if (error) {
@@ -202,7 +202,7 @@ router.put("/unsave/:id", function(req, res) {
 	var art = req.params;
 
 	   Article.update({ "_id": art.id }, { "saved": false})
-	   // Execute the above query
+	   // Execute the query above
 	     .exec(function(err, doc) {
 		   	  // Log any errors
 		   	  if (error) {
@@ -214,6 +214,27 @@ router.put("/unsave/:id", function(req, res) {
 		   	  }
 	   });
 }); // end unsave
+
+// Route to update a comment
+router.put("/commentupdate/:id", function(req, res) {
+	var cmnt = req.params;
+
+	console.log("comment: " + req.body.item);
+
+	Comment.findOneAndUpdate({ "_id": cmnt.id }, { "body": req.body.item })
+	// Execute the query above
+	.exec(function (error, doc) {
+		// Log any errors
+		if (error) {
+			console.log(error);
+		}
+		else {
+			// Or send the document to the browser
+			console.log("response sent: " + JSON.stringify(doc));
+			res.send(doc);
+		}
+	});
+}); // end comment update
 
 // Export routes for server.js to use
 module.exports = router;
