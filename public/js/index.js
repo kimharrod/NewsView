@@ -98,6 +98,43 @@ function makeBinding () {
 				$("#save").css("color", "white");
 			} // end change color of save button
 
+		// Enable in-line comment editing and deletion
+		$(".c-item").on("click", function() {
+
+			itemText = $(this).text();
+
+			// check if an item has been selected for editing
+			if (activeId === 0) {
+
+				activeId = $(this).attr('id');
+				edititemId = $(this).attr('id');
+				console.log("clicked: " + activeId);
+
+				itemClicked = this;
+
+				$(this).html('<input type="text" size="43" id="ctext" value="' + itemText + '"><button id="commentupdate">Ok</button><button id="commentDelete">X</button>');
+			}// end if item selected
+		
+			// Function to update a comment with click on OK button
+			$("#commentUpdate").on("click", function() {
+
+				$.ajax({
+					url: '/commentupdate/' + edititemId,
+					type: 'put',
+					data: {item: $("#ctext").val()}
+				})
+				  .done(function(data) {
+
+				  	activeId = 0;
+
+				  	$(itemClicked).html(data.body);
+
+				    // Log the response
+				    console.log(data);
+				  });
+
+			}); // end comment update 
+
 			// On click function to save/unsave articles
 			$("#save").click(function() {
 
@@ -272,6 +309,22 @@ $(".item").click(function() {
   }); // end of get articles callback
 
 }); // end All/Save category menu
+
+// Binding on modal exit event to refresh the All/Saved articles
+$('#articleModal').on('hidden.bs.modal', function() {
+
+	console.log($("#saved").css('background-color'));
+
+	if (clickedId === 'saved') {
+
+		$("#saved").trigger("click");
+	
+	} else {
+
+		$("#all").trigger("click");
+	}
+
+}); // end modal exit event binding
 
 
 makeBinding();
