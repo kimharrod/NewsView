@@ -144,6 +144,39 @@ router.get("/articles/:id", function(req, res) {
 	});	
 });
 
+// Create a new comment
+router.post("/comment/:id", function(req, res) {
+
+	// Create a new comment and pass the req.body to the entry
+	var newComment = new Comment(req.body);
+
+	// Save the new comment to the database
+	newComment.save(function(error, doc) {
+		//Log any errors
+		if (error) {
+			console.log(error);
+		}
+		// Otherwise
+		else {
+			// Find our article and push the new comment id into the comments array
+			Article.findOneAndUpdate({"_id": req.params.id}, { $push: { "comments": doc.id } }, { new: true})
+			// And populate all of the comments associated with it
+			.populate("comments")
+			// Execute the above query
+			.exec(function(err, doc) {
+				// Log any errors
+				if (error) {
+					console.log(error);
+				}
+				else {
+					// Or send the document to the browser
+					res.send(doc);
+				}
+			});
+		}
+	});
+});
+
 // Export routes for server.js to use
 module.exports = router;
 
