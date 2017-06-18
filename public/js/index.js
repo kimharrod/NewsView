@@ -1,3 +1,4 @@
+// Initialize variables
 var	hString = "";
 var	cardName = "";
 var	cardImg = "";
@@ -8,6 +9,10 @@ var	artSaved = false;
 var	cardDesc = "";
 var artId = "";
 var footer = "";
+var clickedId = "";
+var preclickColor = "";
+var preclickThis = "";
+var clickedThis = "";
 
 
 // Scrape the news site each time a user visits the app
@@ -190,5 +195,83 @@ var dateString = moment().format('dddd, MMMM Do, YYYY');
 $("#date").text(dateString);
 
 } // end binding on article cards & card elements
+
+// Utility function to redraw a single article card
+function appendCard(art_id, title, content) {
+
+	var h = '<div class="card myArts" id="' + artId + '">';
+	h += '<div class="card-header">' + title + '</div>';
+	h += '<div class="card-block">';
+	h += '<div class="card-text">';
+	h += '<div class="panel-body">';
+	h += content;
+	h += '</div>';
+	h += '</div>';
+	h += '</div>';
+	$("#articles").append(h);
+
+} // end function appendCard
+
+// All/Saved category menu (slider menu if screen width is exceeded)
+$(".item").click(function() {
+
+	$("#articles").html("");
+
+	// Sets color of active menu button (All or Saved)
+	if (preclickThis) {
+		$(preclickThis).css('background-color', preclickColor);
+	}
+
+	clickedThis = this;
+	preclickThis = clickedThis;
+	preclickColor = $(clickedThis).css('background-color');
+
+	clickedId = $(clickedThis).attr("id");
+
+	$(clickedThis).css('background-color', '#d9534f');
+
+  // Ajax call to get all articles
+  $.getJSON("/articles", function(articles) {
+
+  	for (var i = 0; i < articles.length; i++) {
+
+  		cardImg = articles[i].image;
+
+  		if (!cardImg) {
+
+  			cardImg = "img/news-image.jpg";
+
+  		} // end if no article image available
+
+  		
+  		// Assemble info to be displayed by the appendcard function
+  		var itemString = '<img src="' + cardImg + '"width="100%">';
+  		itemString += '<p>' + articles[i].description + '</p>';
+  		artId = articles[i]._id;
+
+  		// conditional to render All articles or only Saved articles
+  		if (clickedId === "all") {
+  			appendCard(artId, articles[i].title, itemString);
+
+  		} else {
+  			
+  			if (articles[i].saved === true) {
+  				appendCard(artId, articles[i].title, itemString);			
+  			} // end if saved article
+
+  		} // end if all/saved if/else
+
+  	} // end for each article
+  	
+  	// remove existing bindings to prevent multiple bindings
+  	$("#add").unbind("click");
+  	$("#commentupdate").unbind("click");
+
+  	makeBinding();
+
+  }); // end of get articles callback
+
+}); // end All/Save category menu
+
 
 makeBinding();
