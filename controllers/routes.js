@@ -177,6 +177,25 @@ router.post("/comment/:id", function(req, res) {
 	});
 });
 
+// Route to save an article
+router.put("/save/:id", function(req, res) {
+
+	 var art = req.params;
+
+	   Article.update({ "_id": art.id }, { "saved": true })
+	     // Execute the above query
+	     .exec(function(err, doc) {
+	     	// Log any errors
+	     	if (error) {
+	     		console.log(error);
+	     	}
+	     	else {
+	     		// Or send the document to the browser
+	     		res.send(doc);
+	     	}
+	     });
+}); // end save 
+
 // Export routes for server.js to use
 module.exports = router;
 
