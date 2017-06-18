@@ -217,6 +217,7 @@ router.put("/unsave/:id", function(req, res) {
 
 // Route to update a comment
 router.put("/commentupdate/:id", function(req, res) {
+	
 	var cmnt = req.params;
 
 	console.log("comment: " + req.body.item);
@@ -235,6 +236,25 @@ router.put("/commentupdate/:id", function(req, res) {
 		}
 	});
 }); // end comment update
+
+// Route to delete a comment
+router.delete("/commentdelete/.id", function(req, res) {
+	
+	var cmnt = req.params;
+
+	Comment.find({ "_id": cmnt.id }).remove()
+	// Execute the query above
+	.exec(function (error, doc) {
+		// Log any errors
+		if (error) {
+			console.log(error);
+		}
+		else {
+			// Or send the document to the browser
+			res.send(doc);
+		}
+	});
+}); // end comment delete
 
 // Export routes for server.js to use
 module.exports = router;
