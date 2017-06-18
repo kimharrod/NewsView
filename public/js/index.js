@@ -4,9 +4,10 @@ var	cardImg = "";
 var	artAuthor = "";
 var carddata = {};
 var	artSrc = "";
-var	artSaved = "";
+var	artSaved = false;
 var	cardDesc = "";
 var artId = "";
+var footer = "";
 
 
 // Scrape the news site each time a user visits the app
@@ -28,7 +29,7 @@ function makeBinding () {
 	// Save the article id for the clicked article
 	artId = $(this).attr("id");
 
-	console.log("\nart_id: " + artId);
+	console.log("\n in myArts art_id: " + artId);
 
 		// Retrieve the article info including associated comments
 		$.getJSON("/articles/" + artId, function(carddata) {
@@ -52,7 +53,7 @@ function makeBinding () {
 			// Assemble the comments string to be inserted via jQuery for display
 			hString = cardDesc + '<br><br>Comments:<br><ol>';
 
-			for (var i = 0; i = carddata.comments.length; i++) {
+			for (var i = 0; i < carddata.comments.length; i++) {
 
 				hString += '<li class="c-item" id=' + carddata.comments[i]._id + '>' + carddata.comments[i].body + ' <i class="fa fa-pencil" aria-hidden="false"></i>';
 
@@ -61,10 +62,18 @@ function makeBinding () {
 			// Add a closing tag to the comments string
 			hString += '</ol';
 
-			// Save action here keeps track of saved/unsaved state
+			// Save action here keeps track of saved/unsaved article state
+			var saveAction = "";
+
+			if (artSaved === false) {
+				saveAction = "Save Article";
+			  }	else {
+				saveAction = "Unsave Article"; 
+			} // end saveAction assignment if/else
+
 
 			// Assemble modal footer
-			footer = '<center>Read article <a href="' + artSrc + '" target="_blank">here</a> <button type="button" id="reset" class="btn btn-default" data-dismiss="modal">Close</button>';
+			footer = '<button type="button" id="save" class="btn btn-default">' + saveAction + '</button><center>Read article <a href="' + artSrc + '" target="_blank">here</a> <button type="button" id="reset" class="btn btn-default" data-dismiss="modal">Close</button>';
 
 			// Insert the article data and comments into the modal 
 			$("#artName").text(cardName);
@@ -74,7 +83,58 @@ function makeBinding () {
 
 			// Show the article modal
 			$("#articleModal").modal('toggle');	
-		
+
+			// Change the color of the save button based on current state
+			if ($("#save").html() === "Unsave Article") {
+				$("#save").css("background", "");
+				$("#save").css("color", "");
+			} else {
+				$("#save").css("background", "#d9534f");
+				$("#save").css("color", "white");
+			} // end change color of save button
+
+			// On click function to save/unsave articles
+			$("#save").click(function() {
+
+				if (saveAction === "Save Article") {
+
+					$.ajax({
+						url: '/save/' + artId,
+						type: 'put'
+					})
+					// With that done
+					.done(function(data) {
+					// Log the response
+					console.log(data);
+					});
+
+					saveAction = "Unsave Article";
+					$("#save").text("Unsave Article");
+					$("#save").css("background", "");
+					$("#save").css("color", "");
+
+			  } else {
+
+			  		$.ajax({
+			  			url: '/unsave/' + artId,
+			  			type: 'put'
+			  		})
+			  		// With that done
+			  		.done(function(data) {
+			  		// Log the response
+			  		console.log(data);
+			  		});
+
+			  		saveAction = "Save Article";
+			  		$("#save").text("Save Article");
+			  		$("#save").css("background", "#d9534f");
+			  		$("#save").css("color", "white");
+
+
+			  } // end save/unsave if else
+
+			}); // end on click function save/unsave
+				
 		}); // end get article info callback
 
 	}); // end binding on article cards
@@ -119,6 +179,10 @@ function makeBinding () {
 			$("#artComments").html(cString);
 
 		}); // end ajax post callback function
+
+		// clear the textarea
+		$("#addText").val("");
+
 	}); // end on click add a comment
 
 // use Moment to query, format and display the current date

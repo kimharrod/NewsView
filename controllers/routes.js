@@ -73,7 +73,7 @@ router.get("/scrape", function(req, res) {
 			console.log(JSON.stringify(result));
 
 			// Check to see if an article with title already exists in the database
-			Article.count({ title: result.title }, function (err, count) {
+			Article.count({ title: result.title }, function (error, count) {
 
 				// If it isn't a duplicate, then:
 				if (count < 1) {
@@ -84,10 +84,10 @@ router.get("/scrape", function(req, res) {
 					var entry = new Article(result);
 
 					// Save entry to the db
-					entry.save(function(err, doc) {
+					entry.save(function(error, doc) {
 
 						// Log any errors
-						if (err) {
+						if (error) {
 							console.log(err);
 						}
 
@@ -163,7 +163,7 @@ router.post("/comment/:id", function(req, res) {
 			// And populate all of the comments associated with it
 			.populate("comments")
 			// Execute the query above
-			.exec(function(err, doc) {
+			.exec(function(error, doc) {
 				// Log any errors
 				if (error) {
 					console.log(error);
@@ -184,7 +184,7 @@ router.put("/save/:id", function(req, res) {
 
 	   Article.update({ "_id": art.id }, { "saved": true })
 	     // Execute the query above
-	     .exec(function(err, doc) {
+	     .exec(function(error, doc) {
 	     	// Log any errors
 	     	if (error) {
 	     		console.log(error);
@@ -203,7 +203,7 @@ router.put("/unsave/:id", function(req, res) {
 
 	   Article.update({ "_id": art.id }, { "saved": false})
 	   // Execute the query above
-	     .exec(function(err, doc) {
+	     .exec(function(error, doc) {
 		   	  // Log any errors
 		   	  if (error) {
 		   	  	console.log(error);
