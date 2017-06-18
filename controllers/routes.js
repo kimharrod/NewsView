@@ -1,8 +1,54 @@
+// Dependencies
+var express = require("express");
+var bodyParser = require("body-parser");
+var logger = require("morgan");
+var request = require("request");
+var cheerio = require("cheerio");
+var mongoose = require("mongoose");
+
+// Require the Article and Comment models
+var Article = require("../models/Article.js");
+var Comment = require("../models/Comment.js");
+
 // Set up the router middleware
 var router = express.Router();
 
+// Handlebars-related root route
+router.get("/", function(req, res) {
+
+	//Grab every doc in the Articles array
+	Article.find({}, function(error, doc) {
+		//Log any errors
+		if (error) {
+			console.log(error);
+		}
+		// or send the doc to the browser as a JSON object
+		else {
+			var data = {
+			  articles: []
+			};
+
+		  for (var i = 0; i < doc.length; i++) {
+		  	var cardImg = doc[i].image;
+
+		  	if (!cardImg) {
+
+		  		cardImg = "img/news-image.jpg";  		
+		    
+		    } // end if no article image provided
+
+		data.articles.push({'id': doc[i]._id, 'title': doc[i].title, 'image': cardImg, 'description': doc[i].description});
+
+		} // end for each article
+
+		// send the results to handlebars to be rendered
+		res.render("index", data);
+		}
+  	});
+});
+
 // A GET request to scrape the progressive.org website
-app.get("/scrape", function(req, res) {
+router.get("/scrape", function(req, res) {
 	// First get the body of the html with request
 	request("http://progressive.org/dispatches", function(error, response, html) {
 		// Then load that into cheerio and save it to $ for a shorthand selector
@@ -62,7 +108,7 @@ app.get("/scrape", function(req, res) {
 });
 
 // Route to retrieve scraped articles from the mongoDB
-app.get("/articles/", function(req, res) {
+router.get("/articles/", function(req, res) {
 	// Get all docs in the Articles array
 	Article.find({}, function(error, doc) {
 
@@ -77,7 +123,7 @@ app.get("/articles/", function(req, res) {
 });
 
 // Route to retrieve a single article by ObjectID
-app.get("/articles/:id", function(req, res) {
+router.get("/articles/:id", function(req, res) {
 
 	// Using the id passed in the id parameter, 
 	// Prepare a db query that finds the matching article
@@ -97,6 +143,9 @@ app.get("/articles/:id", function(req, res) {
 		}
 	});	
 });
+
+// Export routes for server.js to use
+module.exports = router;
 
 
 

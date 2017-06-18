@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 var ArticleSchema = new Schema({
 
 	title: {
-		type: String;
+		type: String,
 		required: true
 	},
 	image: {
