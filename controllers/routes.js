@@ -238,7 +238,7 @@ router.put("/commentupdate/:id", function(req, res) {
 }); // end comment update
 
 // Route to delete a comment
-router.delete("/commentdelete/.id", function(req, res) {
+router.delete("/commentdelete/:id", function(req, res) {
 	
 	var cmnt = req.params;
 

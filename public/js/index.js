@@ -13,6 +13,10 @@ var clickedId = "";
 var preclickColor = "";
 var preclickThis = "";
 var clickedThis = "";
+var itemText = "";
+var activeId = 0;
+var edititemId = "";
+var itemClicked = "";
 
 
 // Scrape the news site each time a user visits the app
@@ -108,11 +112,11 @@ function makeBinding () {
 
 				activeId = $(this).attr('id');
 				edititemId = $(this).attr('id');
-				console.log("clicked: " + activeId);
+				//console.log("clicked: " + activeId);
 
 				itemClicked = this;
 
-				$(this).html('<input type="text" size="43" id="ctext" value="' + itemText + '"><button id="commentupdate">Ok</button><button id="commentDelete">X</button>');
+				$(this).html('<input type="text" size="43" id="ctext" value="' + itemText + '"><button id="commentUpdate">Ok</button><button id="commentDelete">X</button>');
 			}// end if item selected
 		
 			// Function to update a comment with click on OK button
@@ -133,7 +137,29 @@ function makeBinding () {
 				    console.log(data);
 				  });
 
-			}); // end comment update 
+			}); // end comment update
+
+			// Function to delete a comment on click of X button
+			$("#commentDelete").on("click", function() {
+
+				$.ajax({
+					url: '/commentdelete/' + edititemId,
+					type: 'delete'
+				})
+				  .done(function(data) {
+
+				  	activeId = 0;
+
+				  	$(itemClicked).remove();
+
+				  	//Log the response
+				  	console.log(data);
+
+				});
+
+			}); // end delete comment
+
+		}); // end in-line comment edit and delete
 
 			// On click function to save/unsave articles
 			$("#save").click(function() {
@@ -219,6 +245,65 @@ function makeBinding () {
 			cString += '</ol>'
 			// Insert the updated comments into the modal
 			$("#artComments").html(cString);
+
+				// Enable in-line comment editing and deletion
+				$(".c-item").on("click", function() {
+
+					itemText = $(this).text();
+
+					// check if an item has been selected for editing
+					if (activeId === 0) {
+
+						activeId = $(this).attr('id');
+						edititemId = $(this).attr('id');
+						//console.log("clicked: " + activeId);
+
+						itemClicked = this;
+
+						$(this).html('<input type="text" size="43" id="ctext" value="' + itemText + '"><button id="commentUpdate">Ok</button><button id="commentDelete">X</button>');
+					}// end if item selected
+				
+					// Function to update a comment with click on OK button
+					$("#commentUpdate").on("click", function() {
+
+						$.ajax({
+							url: '/commentupdate/' + edititemId,
+							type: 'put',
+							data: {item: $("#ctext").val()}
+						})
+						  .done(function(data) {
+
+						  	activeId = 0;
+
+						  	$(itemClicked).html(data.body);
+
+						    // Log the response
+						    console.log(data);
+						  });
+
+					}); // end comment update
+
+					// Function to delete a comment on click of X button
+					$("#commentDelete").on("click", function() {
+
+						$.ajax({
+							url: '/commentdelete/' + edititemId,
+							type: 'delete'
+						})
+						  .done(function(data) {
+
+						  	activeId = 0;
+
+						  	$(itemClicked).remove();
+
+						  	//Log the response
+						  	console.log(data);
+
+						});
+
+					}); // end delete comment
+
+				}); // end in-line comment edit and delete
 
 		}); // end ajax post callback function
 
