@@ -25,7 +25,7 @@ NewsView works as follows:
 
 3. The user can add a comment by typing in the text box, and clicking the "Add" button.
 
-![NewsView add comment](http://fios.vc/NewsViewAddComment.png "Add comment")
+![NewsView add comment](http://fios.vc/NewsViewAddComment2.png "Add comment")
 
 4. When the user hovers over an existing comment, an edit pencil icon appears. Clicking on the comment will activate the text for editing and display "OK" and "X" checkboxes to the right of the comment. After editing the text, the user checks "OK". To delete the comment, the user clicks the "X".
 
